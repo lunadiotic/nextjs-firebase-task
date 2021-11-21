@@ -2,6 +2,7 @@ import { collection, onSnapshot, orderBy, query } from "@firebase/firestore"
 import { useEffect, useState } from "react"
 import { db } from "../firebase"
 import Task from "./Task"
+import Box from '@mui/material/Box';
 
 const TaskList = () => {
     const [task, setTask] = useState([])
@@ -22,7 +23,7 @@ const TaskList = () => {
         return unsubscribe
     }, [])
     return (
-        <div>
+        <Box sx={{ pb: 5}}>
             { 
                 task.map((task) => 
                     <Task 
@@ -33,7 +34,7 @@ const TaskList = () => {
                     />
                 ) 
             }
-        </div>
+        </Box>
     )
 }
 
