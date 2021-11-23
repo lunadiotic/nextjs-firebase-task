@@ -1,25 +1,36 @@
 import { Button, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
 import { db } from '../firebase';
 import { TaskContext } from '../pages/TaskContext';
 
 const TaskForm = () => {
-    const [task, setTask] = useState({
-        title: '',
-        detail: ''
-    })
+    const inputAreaRef = useRef()
     // import showAlert from Context
-    const {showAlert} = useContext(TaskContext)
+    const {showAlert, task, setTask} = useContext(TaskContext)
     const onSubmit = async() => {
         const collectionRef = collection(db, "tasks")
         const docRef = await addDoc(collectionRef, { ...task, timestamp: serverTimestamp() })
         showAlert('success', `Task with id ${docRef.id} is added successfully`)
         setTask({ title: '', detail: ''})
     }
+    useEffect(() => {
+        const checkClickedOutside = e => {
+            if (!inputAreaRef.current.contains(e.target)){
+                setTask({title: '', detail: ''})
+                console.log('Outside form area')
+            } else {
+                console.log('Inside form')
+            }
+        }
+        document.addEventListener("mousedown", checkClickedOutside)
+        return () => {
+            document.removeEventListener("mousedown", checkClickedOutside)
+        }
+    }, [])
     return (
-        <div>
+        <div ref={inputAreaRef}>
             {/* <pre>{JSON.stringify(task)}</pre> */}
             <TextField 
                 fullWidth 

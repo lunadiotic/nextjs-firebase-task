@@ -11,6 +11,11 @@ export default function Home() {
   const [alertType, setAlertType] = useState("success")
   // set alert message
   const [alertMessage, setAlertMessage] = useState("")
+  // share state with Context
+  const [task, setTask] = useState({
+    title: '',
+    detail: ''
+  })
   const showAlert = (type, msg) => {
     setAlertType(type);
     setAlertMessage(msg)
@@ -24,7 +29,7 @@ export default function Home() {
     setOpen(false);
   };
   return (
-    <TaskContext.Provider value={{showAlert}}>
+    <TaskContext.Provider value={{ showAlert, task, setTask }}>
       <Container maxWidth="sm">
         <TaskForm/>
         <Snackbar 
