@@ -1,7 +1,7 @@
 import { Button, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useContext, useEffect, useRef } from 'react';
-import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
+import { addDoc, collection, serverTimestamp, updateDoc, doc } from '@firebase/firestore';
 import { db } from '../firebase';
 import { TaskContext } from '../pages/TaskContext';
 
@@ -10,6 +10,14 @@ const TaskForm = () => {
     // import showAlert from Context
     const {showAlert, task, setTask} = useContext(TaskContext)
     const onSubmit = async() => {
+        if (task?.hasOwnProperty('timestamp')) {
+            const docRef = doc(db, "tasks", task.id)
+            const taskUpdated =  { ...task, timestamp: serverTimestamp() }
+            updateDoc(docRef, taskUpdated)
+            showAlert('info', `Task with id ${docRef.id} is updated successfully`)
+            setTask({ title: '', detail: ''})
+            return
+        }
         const collectionRef = collection(db, "tasks")
         const docRef = await addDoc(collectionRef, { ...task, timestamp: serverTimestamp() })
         showAlert('success', `Task with id ${docRef.id} is added successfully`)
@@ -48,7 +56,9 @@ const TaskForm = () => {
                 variant="contained" 
                 sx={{ mt:3 }} 
                 endIcon={<SendIcon />}
-                onClick={onSubmit}>Add Task</Button>
+                onClick={onSubmit}>
+                    {task.hasOwnProperty('timestamp') ? 'Update' : 'Save'}
+                </Button>
         </div>
     )
 }
