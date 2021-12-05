@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
             }
             const token = await user.getIdToken();
             console.log('authenticated');
+            console.log('token', token);
+            console.log('user', user);
         });
     }, [])
     return (
