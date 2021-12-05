@@ -31,7 +31,6 @@ export default function Home() {
     setOpen(false);
   };
   // return <Loading type="spin" color="blue"/>
-  return <Login/>
   return (
     <TaskContext.Provider value={{ showAlert, task, setTask }}>
       <Container maxWidth="sm">
