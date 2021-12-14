@@ -1,14 +1,16 @@
-import { collection, onSnapshot, orderBy, query } from "@firebase/firestore"
+import { collection, onSnapshot, orderBy, query, where } from "@firebase/firestore"
 import { useEffect, useState } from "react"
 import { db } from "../firebase"
 import Task from "./Task"
 import Box from '@mui/material/Box';
+import { useAuth } from "../Auth";
 
 const TaskList = () => {
     const [task, setTask] = useState([])
+    const {currentUser} = useAuth()
     useEffect(() => {
         const collectionRef = collection(db, "tasks")
-        const q = query(collectionRef, orderBy("timestamp", "desc"))
+        const q = query(collectionRef, where("email", "==", currentUser?.email), orderBy("timestamp", "desc"))
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             setTask(

@@ -4,8 +4,11 @@ import { useContext, useEffect, useRef } from 'react';
 import { addDoc, collection, serverTimestamp, updateDoc, doc } from '@firebase/firestore';
 import { db } from '../firebase';
 import { TaskContext } from '../pages/TaskContext';
+import { useAuth } from '../Auth';
 
 const TaskForm = () => {
+    // set current user
+    const { currentUser } = useAuth()
     const inputAreaRef = useRef()
     // import showAlert from Context
     const {showAlert, task, setTask} = useContext(TaskContext)
@@ -19,7 +22,7 @@ const TaskForm = () => {
             return
         }
         const collectionRef = collection(db, "tasks")
-        const docRef = await addDoc(collectionRef, { ...task, timestamp: serverTimestamp() })
+        const docRef = await addDoc(collectionRef, { ...task, email: currentUser.email, timestamp: serverTimestamp() })
         showAlert('success', `Task with id ${docRef.id} is added successfully`)
         setTask({ title: '', detail: ''})
     }
