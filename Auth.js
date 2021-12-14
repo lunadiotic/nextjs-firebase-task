@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     }, [])
 
     if(loading) {
-        return <Loading type="spin" color="blue"/>
+        return <Loading type="spin" color="blue" height={'8%'} width={'8%'}/>
     }
 
     if(!currentUser) {
